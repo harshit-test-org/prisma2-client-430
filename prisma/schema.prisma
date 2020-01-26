@@ -1,0 +1,105 @@
+datasource db {
+  provider = "mysql" // other options are: "mysql" and "sqlite"
+  url      = "place_your_own_url_here"
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum AssetType {
+  VIDEO
+  IMAGE
+  AUDIO
+}
+
+model Asset {
+  coordinates Coordinate?
+  createdAt   DateTime    @default(now())
+  description String
+  fileName    String
+  id          String      @default(uuid()) @id
+  mimeType    String
+  owner       User
+  remarks     String?
+  title       String
+  trashed     Boolean     @default(false)
+  type        AssetType
+  updatedAt   DateTime  @updatedAt
+  tags        Tag[]
+}
+
+model Assignment {
+  createdAt   DateTime    @default(now())
+  description String
+  endTime     DateTime
+  id          String      @default(uuid()) @id
+  isActive    Boolean  @default(false)
+  isPublic    Boolean  @default(false)
+  startTime   DateTime
+  title       String
+  trashed     Boolean  @default(false)
+  updatedAt   DateTime  @updatedAt
+  groups      Group[]
+}
+
+model Contact {
+  id      String  @default(uuid()) @id
+  liked   Boolean @default(false)
+  trashed Boolean @default(false)
+  user    User
+}
+
+model Coordinate {
+  id        String  @default(uuid()) @id
+  latitude  Float
+  longitude Float
+  trashed   Boolean @default(false)
+  assets    Asset[]
+}
+
+model Group {
+  assignment Assignment?
+  id          String      @default(uuid()) @id
+  name       String
+  trashed    Boolean     @default(false)
+  users      User[]
+}
+
+model Project {
+  createdAt   DateTime    @default(now())
+  fps       Float
+  height    Float
+  id          String      @default(uuid()) @id
+  title     String
+  trashed   Boolean  @default(false)
+  updatedAt   DateTime  @updatedAt
+  width     Float
+}
+
+model Role {
+  id          String      @default(uuid()) @id
+  name String @unique
+}
+
+model Tag {
+  id          String      @default(uuid()) @id
+  label  String  @unique
+  assets Asset[]
+}
+
+model User {
+  createdAt   DateTime    @default(now())
+  email     String @unique
+  firstName String
+  id          String      @default(uuid()) @id
+  lastName  String
+  password  String
+  trashed   Boolean    @default(false)
+  updatedAt   DateTime  @updatedAt
+  assets    Asset[]
+  contacts  Contact[]
+  groups    Group[]
+}
+
+
+
